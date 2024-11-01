@@ -1,2 +1,78 @@
 # Ignore the .env file
 .env
+
+# Build and package outputs
+bin/
+obj/
+**/*.dll
+**/*.exe
+**/*.app
+**/*.so
+**/*.dylib
+**/*.pdb
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+*.dbmdl
+.vscode/
+
+# Log files
+*.log
+logs/
+
+# Visual Studio specific folders
+.vscode/
+.vs/
+
+# macOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
+desktop.ini
+
+# Rider and JetBrains specific folders
+.idea/
+*.sln.iml
+
+# Resharper specific files
+_ReSharper*/
+*.DotSettings.user
+
+# Coverage and testing
+TestResults/
+*.coverage
+*.coveragexml
+*.coveragejson
+
+# NuGet packages and configuration
+*.nupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Publish outputs
+wwwroot/
+App_Data/
+*.Publish.xml
+
+# Environment and configuration files (Do not commit secrets!)
+.env
+.env.*
+secrets.json
+
+# Dependencies
+node_modules/
+
+# Database
+*.mdf
+*.ldf
+*.sqlite
+
+# Temporary files
+**/*.tmp
