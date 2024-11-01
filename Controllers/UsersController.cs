@@ -22,39 +22,62 @@ namespace CsvBackEnd.Controllers
 
       using var reader = new StreamReader(file.OpenReadStream());
       using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+
       var users = new List<User>();
+      var validUsers = new List<User>();
+      var invalidUsers = new List<object>();
 
       try
       {
         users = csv.GetRecords<User>().ToList();
 
-        // Validate each user in the list.
-        var validationResults = new List<ValidationResult>();
-
         foreach (var user in users)
         {
-          // Create a new ValidationContext for each user instance.
+          var validationResults = new List<ValidationResult>();
           var validationContext = new ValidationContext(user);
-          
-          // Validate the user model.
-          var isValid = Validator.TryValidateObject(user, validationContext, validationResults, true);
-          if (!isValid)
+
+          // Dictionary to store the validation status of each property.
+          var propertyValidation = user.GetType()
+                                       .GetProperties()
+                                       .ToDictionary(prop => prop.Name, prop => true);
+
+          if (Validator.TryValidateObject(user, validationContext, validationResults, true))
           {
-            // Return the validation errors.
-            return BadRequest(validationResults);
+            validUsers.Add(user);
+          }
+          else
+          {
+            // Mark failed properties as false in propertyValidation dictionary.
+            foreach (var validationResult in validationResults)
+            {
+              foreach (var memberName in validationResult.MemberNames)
+              {
+                propertyValidation[memberName] = false;
+              }
+            }
+
+            invalidUsers.Add(new
+            {
+              User = user,
+              ValidationResults = propertyValidation
+            });
           }
         }
 
-        await _context.Users.AddRangeAsync(users);
-        await _context.SaveChangesAsync();
+        if (validUsers.Any())
+        {
+          await _context.Users.AddRangeAsync(validUsers);
+          await _context.SaveChangesAsync();
+        }
 
-        // Return or process further as needed.
-        return Ok(users);
+        // Return both saved users and invalid entries.
+        return Ok(new { SavedUsers = validUsers, InvalidEntries = invalidUsers });
       }
       catch (Exception ex)
       {
         return BadRequest(ex.Message);
       }
     }
+
   }
 }
