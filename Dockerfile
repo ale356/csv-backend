@@ -6,15 +6,15 @@ EXPOSE 80
 # Use the .NET SDK image to build the app
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["CsvUploadApp.csproj", "./"]
-RUN dotnet restore "CsvUploadApp.csproj"
+COPY ["csv-backend.csproj", "./"]
+RUN dotnet restore "csv-backend.csproj"
 
 # Copy and publish the app
 COPY . .
-RUN dotnet publish "CsvUploadApp.csproj" -c Release -o /app/publish
+RUN dotnet publish "csv-backend.csproj" -c Release -o /app/publish
 
 # Use the base image to run the app
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "CsvUploadApp.dll"]
+ENTRYPOINT ["dotnet", "csv-backend.dll"]
