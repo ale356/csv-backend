@@ -15,7 +15,7 @@ namespace CsvBackEnd.Controllers
 
     // Uploads the user CSV file to the database.
     [HttpPost("upload")]
-    public async Task<IActionResult> UploadUserCsv(IFormFile file)
+    public async Task<IActionResult> UploadUserCsv([FromForm] IFormFile file)
     {
       if (file == null || file.Length == 0)
         return BadRequest("No file uploaded.");
