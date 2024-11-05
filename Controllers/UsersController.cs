@@ -5,7 +5,7 @@ using CsvHelper;
 using System.Globalization;
 using System.ComponentModel.DataAnnotations;
 
-namespace CsvBackEnd.Controllers
+namespace csvBackEnd.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
